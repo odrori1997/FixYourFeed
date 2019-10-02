@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<body>
+<h1>You're logged in as: {{ user.name }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<div id="piechart"></div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% for i in index %}
+<script type="text/javascript">
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(drawChart);
+
+	function drawChart() {
+		var data = google.visualization.arrayToDataTable([
+			['Sentiment', 'Number of Tweets'],
+			['Positive', {{ i.positive_tweets }} ],
+			['Negative', {{ i.negative_tweets }} ],
+			['Neutral', {{ i.neutral_tweets }} ]
+		]);
+		var options = {'title':'Positivity Index', 'width':550, 'height':400};
+		var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+		chart.draw(data, options);
+	}
+</script>
+{% endfor %}
+<!-- <ul> -->
+<!-- {% for i in index %}
+	<li>{{ i.positive_tweets }}</li>
+{% endfor %}
+</ul> -->
+</body>
+</html>

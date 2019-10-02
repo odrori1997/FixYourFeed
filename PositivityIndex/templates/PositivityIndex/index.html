@@ -1,0 +1,16 @@
+{% if user %}
+	<ul>
+	{% for i in user %}
+		<li><a href="/PositivityIndex/{{ i.id }}/">{{ i.name }}</a></li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No users are available.</p>
+{% endif %}
+
+<form method="POST" action="results">
+{% csrf_token %}
+<input type="text" name="textfield">
+
+<button type="submit">Analyze user's tweets</button>
+</form>
