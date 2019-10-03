@@ -11,14 +11,15 @@ from nltk.tokenize import WordPunctTokenizer
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
+from config import *
 
 # Twitter api keys
-keysfile = open("../twitter_api_keys.txt", "r")
-keys = keysfile.readlines()
-API_KEY = keys[0].split()[2]
-API_SECRET_KEY = keys[1].split()[2]
-ACCESS_TOKEN = keys[2].split()[2]
-ACCESS_SECRET_TOKEN = keys[3].split()[2]
+# keysfile = open("../twitter_api_keys.txt", "r")
+# keys = keysfile.readlines()
+# API_KEY = keys[0].split()[2]
+# API_SECRET_KEY = keys[1].split()[2]
+# ACCESS_TOKEN = keys[2].split()[2]
+# ACCESS_SECRET_TOKEN = keys[3].split()[2]
 
 # connect to twitter api
 def authentication(api_key, api_secret_key, access_token, access_secret_token):
@@ -30,7 +31,7 @@ def authentication(api_key, api_secret_key, access_token, access_secret_token):
 # look at tweets from a given account
 def search_tweets(user):
     api = authentication(API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_SECRET_TOKEN)
-    search_result = tweepy.Cursor(api.search, q=user, lang='en').items(50)
+    search_result = tweepy.Cursor(api.search, q=user, lang='en').items(10)
 
     try:
         tweet = search_result.next()
@@ -42,7 +43,11 @@ def search_tweets(user):
 # return user's own timeline
 def get_timeline(user):
     api = authentication(API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_SECRET_TOKEN)
-    search_result = tweepy.Cursor(api.user_timeline, id=user).items(100)
+    search_result = tweepy.Cursor(api.user_timeline, id=user).items(10)
+
+    print("--------------USER ---------------------")
+    print(str(user))
+
     return search_result
 
 # clean tweets for natural language processing
@@ -80,10 +85,10 @@ def analyze_tweets(user, timeline):
         tweets = search_tweets(user)
     for tweet in tweets:
         cleaned_tweet = clean_tweets(tweet.text.encode('utf-8'))
-        try:
-            sentiment_score = get_sentiment_score(cleaned_tweet)
-        except InvalidArgument as e: # if tweet is in another language, continue
-            continue
+        # try:
+        sentiment_score = get_sentiment_score(cleaned_tweet)
+        # except InvalidArgument as e: # if tweet is in another language, continue
+            # continue
         score += sentiment_score
         print('Tweet: {}'.format(cleaned_tweet))
         print('Score: {}'.format(sentiment_score))
@@ -109,7 +114,7 @@ def display_result(user, timeline):
         status = 'POSITIVE'
 
     # modify database to add new index
-    modifyDatabase(user, positive, negative, neutral)
+    modifyDatabase(user, positive, negative, neutral, timeline)
 
 #     # display message using matplotlib graphics
 #     # labels = 'Positive', 'Neutral', 'Negative'
@@ -121,20 +126,18 @@ def display_result(user, timeline):
 #     # ax1.axis('equal')
 #     # plt.show() # decide where to show this pie chart
 
-def modifyDatabase(name, positive, negative, neutral):
-     # check if user exists
-    # ulist = False
-    # try:
-    #     u = User.objects.get(username=name)
-    # except User.DoesNotExist:
-    #     u = User(username=name)
-
-    # u.save()
+def modifyDatabase(name, positive, negative, neutral, timeline):
+    
     try:
         t = Twitter.objects.get(name=name)
     except Twitter.DoesNotExist:
         t = Twitter(name=name)
         t.save()
-    i = Index(twitter=t, positive_tweets = positive, negative_tweets = negative,
+    if timeline == True:
+        u = User.objects.get(username=name)
+        i = Index(user=u, twitter=t, positive_tweets = positive, negative_tweets = negative,
                 neutral_tweets = neutral, run_date = timezone.now())
+    else:
+        i = Index(twitter=t, positive_tweets = positive, negative_tweets = negative,
+        neutral_tweets = neutral, run_date = timezone.now())
     i.save()

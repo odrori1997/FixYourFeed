@@ -1,10 +1,9 @@
-{% if user %}
-	<ul>
-	<li><a href="/PositivityIndex/{{ user.username }}/">{{ user.username }}</a></li>
-	</ul>
-{% else %}
-	<p>No users are available.</p>
-{% endif %}
+<!DOCTYPE html>
+<head>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+<h1><a href="{% url 'userhome' %}">You're logged in as {{ user.username }}.</a></h1>
 
 <form method="POST" action="results">
 {% csrf_token %}
@@ -12,3 +11,34 @@
 
 <button type="submit">Analyze user's tweets</button>
 </form>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<div id="curve_chart" style="width: 900px; height: 500px"></div>
+
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Date Analyzed');
+    data.addColumn('number', 'Positive Tweets');
+    data.addColumn('number', 'Negative Tweets');
+	{% for i, date in Dict.items %}
+    	data.addRow([{{ date|date:"Y-m-d" }},  {{ i.positive_tweets }}, {{ i.negative_tweets }}]);
+    {% endfor %}
+    console.log(data);
+    var options = {
+      title: 'History of Your Feed',
+      curveType: 'smooth',
+      legend: { position: 'bottom' }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+    chart.draw(data, options);
+  }
+</script>
+</body>
+</html>

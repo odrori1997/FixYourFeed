@@ -1,35 +1,45 @@
 <!DOCTYPE html>
 <html lang="en-US">
+<head>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
 <body>
-<h1>You're logged in as: {{ user.name }}</h1>
+<h1>You're logged in as: {{ user.username }}</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<div id="piechart"></div>
-
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-{% for i in index %}
+<table id="table"></table>
 <script type="text/javascript">
-	google.charts.load('current', {'packages':['corechart']});
-	google.charts.setOnLoadCallback(drawChart);
+		google.charts.load('current', {'packages':['corechart']});
+		
+		google.charts.setOnLoadCallback(drawCharts);
 
-	function drawChart() {
-		var data = google.visualization.arrayToDataTable([
-			['Sentiment', 'Number of Tweets'],
-			['Positive', {{ i.positive_tweets }} ],
-			['Negative', {{ i.negative_tweets }} ],
-			['Neutral', {{ i.neutral_tweets }} ]
-		]);
-		var options = {'title':'Positivity Index', 'width':550, 'height':400};
-		var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-		chart.draw(data, options);
-	}
+		function drawCharts() {
+			let c = 0;
+			var chart = [];
+			//  for i in index
+			var options = {'title':'Positivity Index on {{ index.run_date }}', 'width':550, 'height':400};
+			var data = google.visualization.arrayToDataTable([
+				['Sentiment', 'Number of Tweets'],
+				['Positive', {{ index.positive_tweets }} ],
+				['Negative', {{ index.negative_tweets }} ],
+				['Neutral', {{ index.neutral_tweets }} ]
+			]);
+			var row = document.createElement("tr");
+			var col = document.createElement("td");
+			row.appendChild(col);
+			document.getElementById("table").appendChild(row);
+			var div = document.createElement("div");
+			div.id = c.toString();
+			col.appendChild(div);
+			chart.push(new google.visualization.PieChart(document.getElementById(c.toString())));
+			console.log(div);
+			chart[c].draw(data, options);
+			c++;
+			//  endfor
+		}
 </script>
-{% endfor %}
-<!-- <ul> -->
-<!-- {% for i in index %}
-	<li>{{ i.positive_tweets }}</li>
-{% endfor %}
-</ul> -->
+
+<p><a href="{% url 'userhome' %}">Home</a></p>
 </body>
 </html>

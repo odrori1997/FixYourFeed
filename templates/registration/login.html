@@ -1,7 +1,29 @@
-<h2>Login</h2>
-<form method="post">
+{% extends 'base.html' %}
+    {% block title %} Sign in {% endblock %}
+    {% block content %}
+    <div class="row">
+        <div class="col-md-8 mx-auto social-container my-2 order-md-1">
+        	<form method="post">
+        		{% csrf_token %}
+        		{{ form.as_p }}
+            	<button class="btn btn-danger  mb-2" type="submit">
+                	Log In
+           		</button>
+           	<p><strong>--------------- OR --------------------</strong></p>
+            <button class="btn btn-info mb-2">
+                <a href="{% url 'social:begin' 'twitter' %}">Log in with Twitter</a>
+            </button>
+        	</form>
+    	</div>
+    </div>
+    {% endblock %}
+
+<!-- <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
   <p>Twitter handle: <input type="text" name="twitter"><p>
   <button type="submit">Login</button>
 </form>
+ -->
+
+
