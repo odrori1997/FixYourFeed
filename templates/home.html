@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <h1>You're logged in as {{ user.username }}.</h1>
+  <p><a href="/PositivityIndex/index">Track your Index</a></p>
+  <p><a href="/PositivityIndex/results">Analyze your Feed</a></p>
+  <p><a href="{% url 'logout' %}">logout</a></p>
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">login</a>
+{% endif %}
+{% endblock %}

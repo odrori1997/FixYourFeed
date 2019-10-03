@@ -1,6 +1,7 @@
 from django.utils import timezone
 from django.db import models
-from PositivityIndex.models import User, Index
+from PositivityIndex.models import Twitter, Index
+from django.contrib.auth.models import User
 import numpy as np
 import tweepy
 import re
@@ -108,7 +109,7 @@ def display_result(user, timeline):
         status = 'POSITIVE'
 
     # modify database to add new index
-    createUser(user, positive, negative, neutral)
+    modifyDatabase(user, positive, negative, neutral)
 
 #     # display message using matplotlib graphics
 #     # labels = 'Positive', 'Neutral', 'Negative'
@@ -120,15 +121,20 @@ def display_result(user, timeline):
 #     # ax1.axis('equal')
 #     # plt.show() # decide where to show this pie chart
 
-def createUser(name, positive, negative, neutral):
+def modifyDatabase(name, positive, negative, neutral):
      # check if user exists
-    ulist = False
-    try:
-        u = User.objects.get(name=name)
-    except User.DoesNotExist:
-        u = User(name=name)
+    # ulist = False
+    # try:
+    #     u = User.objects.get(username=name)
+    # except User.DoesNotExist:
+    #     u = User(username=name)
 
-    u.save()
-    i = Index(user=u, positive_tweets = positive, negative_tweets = negative,
+    # u.save()
+    try:
+        t = Twitter.objects.get(name=name)
+    except Twitter.DoesNotExist:
+        t = Twitter(name=name)
+        t.save()
+    i = Index(twitter=t, positive_tweets = positive, negative_tweets = negative,
                 neutral_tweets = neutral, run_date = timezone.now())
     i.save()

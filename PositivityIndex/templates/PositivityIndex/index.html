@@ -1,8 +1,6 @@
 {% if user %}
 	<ul>
-	{% for i in user %}
-		<li><a href="/PositivityIndex/{{ i.id }}/">{{ i.name }}</a></li>
-	{% endfor %}
+	<li><a href="/PositivityIndex/{{ user.username }}/">{{ user.username }}</a></li>
 	</ul>
 {% else %}
 	<p>No users are available.</p>
