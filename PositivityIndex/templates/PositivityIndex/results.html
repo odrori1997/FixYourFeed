@@ -2,9 +2,44 @@
 <html lang="en-US">
 <head>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    	#user_login:hover {
+    		outline: solid red;
+    	}
+    </style>
 </head>
 <body>
-<h1>You're logged in as: {{ user.username }}</h1>
+	  <div class="w3-bar w3-blue w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="{% url 'userhome' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+    <a href="{% url 'index' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Track Your Index</a>
+    <a href="{% url 'results' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Analyze Your Timeline</a>
+    <a href="{% url 'searchuser' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Analyze a User's Tweets by Sentiment</a>
+    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">About Us</a>
+    <a href="{% url 'logout' %}" id="user_login" class="w3-bar-item w3-button w3-hide-small w3-padding-large" title="Log out">
+		{% if user.is_authenticated %}
+			You're logged in as {{ user.username }}.
+		{% else %}
+			You are not logged in.
+		{% endif %}
+	</a>
+  </div>
+
+  <!-- Navbar on small screens -->
+  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+    <a href="{% url 'userhome' %}" class="w3-bar-item w3-button w3-padding-large">Home</a>
+    <a href="{% url 'index' %}" class="w3-bar-item w3-button w3-padding-large">Track Your Index</a>
+    <a href="{% url 'results' %}" class="w3-bar-item w3-button w3-padding-large">Analyze Your Timeline</a>
+    <a href="{% url 'index' %}" class="w3-bar-item w3-button w3-padding-large w3-hover-red">Analyze a User's Tweets by Sentiment</a>
+  </div>
+</div>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
@@ -18,7 +53,7 @@
 			let c = 0;
 			var chart = [];
 			//  for i in index
-			var options = {'title':'Positivity Index on {{ index.run_date }}', 'width':550, 'height':400};
+			var options = {'title':'Positivity Index analyzing {{ index.twitter.name }} on {{ index.run_date }}', 'width':550, 'height':400};
 			var data = google.visualization.arrayToDataTable([
 				['Sentiment', 'Number of Tweets'],
 				['Positive', {{ index.positive_tweets }} ],
@@ -39,7 +74,5 @@
 			//  endfor
 		}
 </script>
-
-<p><a href="{% url 'userhome' %}">Home</a></p>
 </body>
 </html>

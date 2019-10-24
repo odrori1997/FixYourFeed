@@ -25,6 +25,7 @@ SECRET_KEY = '&*xon$9cg(z$uk!sjscd%i1rcng1z$x(%z-t^@!z=@fzv6cc!-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ['http://trackyourfeed-env.pugchzx9gh.us-east-1.elasticbeanstalk.com/']
 ALLOWED_HOSTS = []
 
 
@@ -121,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'GMT'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 

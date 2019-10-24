@@ -11,4 +11,5 @@ urlpatterns = [
 	path('', views.guesthome, name='guesthome'),
 	path('guesthome', views.guesthome, name='guesthome'),
 	path('accounts/', include('django.contrib.auth.urls')),
+	path('searchuser', views.searchuser, name='searchuser'),
 ]
