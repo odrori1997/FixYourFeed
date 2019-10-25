@@ -1,3 +1,6 @@
+# This file was for learning and playing around w/ Naive Bayes -- NLTK is inefficient, refer to sklearn_naive_bayes for 
+# a better implementation 
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split

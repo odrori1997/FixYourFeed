@@ -11,12 +11,19 @@ from nltk.corpus import stopwords
 
 import pickle
 
-tweet = [["mean"]]
+import scikit_naive_bayes as sknb
+
 
 f = open('my_classifier.pickle', 'rb')
 classifier = pickle.load(f)
 f.close()
-sentiment_score = classifier.predict(tweet)
 
-print(tweet)
-print(sentiment_score)
+def analyzeTweet(tweet):
+	data = sknb.process(tweet)
+	vectorizer = TfidfVectorizer(max_features=2500, min_df = 2, max_df = 0.8, stop_words = stopwords.words('english'))
+	data = vectorizer.fit_transform(data).toarray()
+	sentiment_score = classifier.predict(tweet)
+	return sentiment_score
+
+# print(tweet)
+# print(sentiment_score)
